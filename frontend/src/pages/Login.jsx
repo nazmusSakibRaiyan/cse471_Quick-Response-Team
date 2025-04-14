@@ -1,13 +1,13 @@
 // src/components/Login.js
 
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext"; // Import useAuth hook
+import { useAuth } from "../context/AuthContext"; 
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth(); // Destructure login from AuthContext
+  const { login } = useAuth(); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
@@ -17,7 +17,7 @@ const Login = () => {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const baseURI = process.env.NODE_ENV === "development" ? "http://localhost:5000" : "";
+      const baseURI = process.env.NODE_ENV === "development" ? "http://localhost:1197" : "";
       const res = await fetch(baseURI + "/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -40,7 +40,7 @@ const Login = () => {
   const handleVerifyOTP = async () => {
     setLoading(true);
     try {
-      const baseURI = process.env.NODE_ENV === "development" ? "http://localhost:5000" : "";
+      const baseURI = process.env.NODE_ENV === "development" ? "http://localhost:1197" : "";
       const res = await fetch(baseURI + "/api/auth/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
