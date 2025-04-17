@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token') || null);
 
   useEffect(() => {
-    // Check for token in localStorage and verify if it's valid
+    
     if (token) {
       fetchUserData();
     }
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserData = async () => {
     try {
-      const baseURI = process.env.NODE_ENV === "development" ? "http://localhost:5000" : "";
+      const baseURI = process.env.NODE_ENV === "development" ? "http://localhost:1197" : "";   //student Id: 21201197
       const res = await fetch(baseURI + '/api/auth/user', {
         method: 'GET',
         headers: {
