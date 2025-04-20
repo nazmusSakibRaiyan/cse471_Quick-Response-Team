@@ -7,22 +7,26 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import { Toaster } from "react-hot-toast";
+import Contact from "./pages/Contact";
+import SOS from "./pages/SOS";
 
 const App = () => (
-  <Router>
-      <AuthProvider>
-      <Navbar />
-      <Toaster position="top-right" />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Route>
-      </Routes>
-  </AuthProvider>
-    </Router>
+	<Router>
+		<AuthProvider>
+			<Navbar />
+			<Toaster position="top-right" />
+			<Routes>
+				<Route path="/" element={<HomePage />} />
+				<Route path="/register" element={<Register />} />
+				<Route path="/login" element={<Login />} />
+				<Route element={<ProtectedRoute />}>
+					<Route path="/dashboard" element={<Dashboard />} />
+					<Route path="/contact" element={<Contact />} />
+					<Route path="/sos" element={<SOS />} />
+				</Route>
+			</Routes>
+		</AuthProvider>
+	</Router>
 );
 
 export default App;

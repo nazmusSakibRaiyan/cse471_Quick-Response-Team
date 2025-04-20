@@ -48,7 +48,7 @@ const Register = () => {
 
     setLoading(true);
     try {
-      const baseURI = process.env.NODE_ENV === "development" ? "http://localhost:1197" : "";
+      const baseURI = process.env.NODE_ENV === "development" ? "http://localhost:5000" : "";
       const res = await fetch(baseURI + "/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

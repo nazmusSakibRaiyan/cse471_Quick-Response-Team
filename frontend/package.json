@@ -13,6 +13,7 @@
     "@tailwindcss/vite": "^4.0.14",
     "autoprefixer": "^10.4.21",
     "axios": "^1.8.4",
+    "frontend": "file:",
     "lucide-react": "^0.484.0",
     "postcss": "^8.5.3",
     "react": "^19.0.0",
