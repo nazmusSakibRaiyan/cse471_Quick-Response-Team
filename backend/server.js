@@ -8,7 +8,8 @@ import contactRoutes from "./routes/contactRoutes.js";
 import userRoute from "./routes/userRoute.js";
 //Taneem
 import broadcastRoutes from "./routes/broadcastRoutes.js";
-
+import userManagementRoutes from "./routes/userManagementRoutes.js";
+import blacklistUserRoutes from "./routes/blacklistUserRoutes.js";
 
 dotenv.config();
 
@@ -31,6 +32,8 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/user", userRoute);
 //Tasneem 
 app.use("/api/broadcast", broadcastRoutes);
+app.use("/api/user-management", userManagementRoutes);
+app.use("/api/blacklist-users", blacklistUserRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

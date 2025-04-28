@@ -33,6 +33,10 @@ const Navbar = () => {
 						<Link to="/broadcast" className="mx-2">
 							Broadcast
 						</Link>
+						<Link to="/user-management" className="mx-2">
+							User Management
+						</Link>
+						<Link to="/blacklisted-users">Blacklisted Users</Link>  
 						<button
 							onClick={logout}
 							className="bg-red-500 px-3 py-1 rounded ml-2"

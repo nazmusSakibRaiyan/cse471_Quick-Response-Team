@@ -10,6 +10,8 @@ import { Toaster } from "react-hot-toast";
 import Contact from "./pages/Contact";
 import SOS from "./pages/SOS";
 import Broadcast from "./pages/Broadcast";
+import UserManagement from "./pages/UserManagement";
+import BlacklistUsers from "./pages/BlacklistUsers";
 
 const App = () => (
 	<Router>
@@ -25,6 +27,13 @@ const App = () => (
 					<Route path="/contact" element={<Contact />} />
 					<Route path="/sos" element={<SOS />} />
 					<Route path="/broadcast" element={<Broadcast />} />
+					<Route path="/broadcast" element={<Broadcast />} />
+					<Route path="/user-management" element={<UserManagement />} />
+					<Route path="/blacklisted-users" element={<BlacklistUsers />} />
+
+					
+					
+
 
 				</Route>
 			</Routes>

@@ -10,6 +10,8 @@ const UserSchema = new mongoose.Schema({
   nid: { type: String, required: true },
   otp: { type: String }, 
   otpExpires: { type: Date }, 
+  //blackst by tasneem
+  blacklisted: { type: Boolean, default: false }, 
 }, { timestamps: true });
 
 const User = mongoose.model("User", UserSchema);
