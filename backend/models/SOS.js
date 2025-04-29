@@ -14,6 +14,7 @@ const SOSSchema = new mongoose.Schema(
 			longitude: { type: Number, required: true },
 		},
 		isResolved: { type: Boolean, default: false },
+		acceptedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: User }],
 	},
 	{ timestamps: true }
 );

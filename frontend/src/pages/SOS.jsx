@@ -89,22 +89,23 @@ export default function SOS() {
 
 		try {
 			setLoading(true);
-			const res = await fetch(
-				"http://localhost:5000/api/sos/sendSoftSOS",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-					body: JSON.stringify({
-						userId: user._id,
-						message,
-						coordinates,
-						receiver,
-					}),
-				}
-			);
+			const endpoint =
+				receiver === "silent"
+					? "http://localhost:5000/api/sos/sendSilentSOS"
+					: "http://localhost:5000/api/sos/sendSoftSOS";
+			const res = await fetch(endpoint, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({
+					userId: user._id,
+					message,
+					coordinates,
+					receiver: receiver !== "silent" ? receiver : undefined,
+				}),
+			});
 			if (res.ok) {
 				toast.success("SOS sent successfully");
 				fetchMySOS();
@@ -147,8 +148,8 @@ export default function SOS() {
 	};
 
 	return (
-		<div className="p-6 bg-gray-100 min-h-screen">
-			<h1 className="text-3xl font-bold mb-4 text-red-600">
+		<div className="p-4 sm:p-6 bg-gray-100 min-h-screen">
+			<h1 className="text-2xl sm:text-3xl font-bold mb-4 text-red-600">
 				🚨 SOS Page
 			</h1>
 
@@ -169,7 +170,7 @@ export default function SOS() {
 				)}
 			</div>
 
-			<div className="mb-6 bg-white p-4 rounded shadow border-l-4 border-red-500">
+			<div className="mb-6 bg-white p-4 sm:p-6 rounded shadow border-l-4 border-red-500">
 				<h2 className="text-xl font-semibold mb-4 text-red-600">
 					🆘 Send SOS
 				</h2>
@@ -186,6 +187,7 @@ export default function SOS() {
 				>
 					<option value="volunteer">Volunteer</option>
 					<option value="contact">Contact</option>
+					<option value="silent">Silent SOS</option>
 				</select>
 				<button
 					className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700"
@@ -196,7 +198,7 @@ export default function SOS() {
 				</button>
 			</div>
 
-			<div className="bg-white mb-6 p-4 rounded shadow border-l-4 border-yellow-500">
+			<div className="bg-white mb-6 p-4 sm:p-6 rounded shadow border-l-4 border-yellow-500">
 				<h2 className="text-xl font-semibold mb-4 text-yellow-600">
 					🚨 Emergency SOS
 				</h2>
@@ -231,7 +233,7 @@ export default function SOS() {
 				)}
 			</div>
 
-			<div className="bg-white p-4 rounded shadow border-l-4 border-green-500">
+			<div className="bg-white p-4 sm:p-6 rounded shadow border-l-4 border-green-500">
 				<h2 className="text-xl font-semibold mb-4 text-green-600">
 					📜 My SOS
 				</h2>
