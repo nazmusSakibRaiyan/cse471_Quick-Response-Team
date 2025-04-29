@@ -4,6 +4,7 @@ import SOS from "../models/SOS.js";
 import Contact from "../models/Contact.js";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import { io } from "../server.js";
 
 dotenv.config();
 
@@ -58,11 +59,11 @@ async function sendEmail(user, receiver, message, coordinates) {
 	});
 }
 
-export const sendSoftSOS = async (req, res) => {
+export const sendSilentSOS = async (req, res) => {
 	try {
-		const { userId, message, coordinates, receiver } = req.body;
+		const { userId, message, coordinates } = req.body;
 
-		const user = await User.findById(userId);
+		const user = await User.findById(userId).select("-password -__v");
 		if (!user) return res.status(404).json({ message: "User not found" });
 
 		const sos = new SOS({
@@ -70,9 +71,47 @@ export const sendSoftSOS = async (req, res) => {
 			message,
 			coordinates,
 		});
-		await sos.save();
+		const newSOS = await sos.save();
+
+		io.emit("newSOS", {
+			message: message,
+			user: user,
+			location: coordinates,
+			_id: newSOS._id,
+			coordinates: coordinates,
+			acceptedBy: [],
+		});
+
+		res.status(200).json({ message: "SOS sent successfully" });
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ message: "Server error", error });
+	}
+};
+
+export const sendSoftSOS = async (req, res) => {
+	try {
+		const { userId, message, coordinates, receiver } = req.body;
+
+		const user = await User.findById(userId).select("-password -__v");
+		if (!user) return res.status(404).json({ message: "User not found" });
+
+		const sos = new SOS({
+			user: user._id,
+			message,
+			coordinates,
+		});
+		const newSOS = await sos.save();
 
 		if (receiver === "volunteer") {
+			io.emit("newSOS", {
+				message: message,
+				user: user,
+				location: coordinates,
+				_id: newSOS._id,
+				coordinates: coordinates,
+				acceptedBy: [],
+			});
 			const allVolunteers = await User.find({ role: "volunteer" });
 			if (!allVolunteers)
 				return res.status(404).json({ message: "No volunteers found" });
@@ -153,6 +192,32 @@ export const getAllMySOS = async (req, res) => {
 		}
 
 		res.status(200).json(sosList);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Server error", error });
+	}
+};
+
+export const acceptSOS = async (req, res) => {
+	try {
+		const { sosId, userId } = req.body;
+
+		const sos = await SOS.findById(sosId);
+		if (!sos) return res.status(404).json({ message: "SOS not found" });
+
+		const user = await User.findById(userId);
+		if (!user) return res.status(404).json({ message: "User not found" });
+
+		if (sos.acceptedBy.includes(userId)) {
+			return res
+				.status(400)
+				.json({ message: "You have already accepted this SOS" });
+		}
+
+		sos.acceptedBy.push(userId);
+		await sos.save();
+
+		res.status(200).json({ message: "SOS accepted successfully", sos });
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ message: "Server error", error });
