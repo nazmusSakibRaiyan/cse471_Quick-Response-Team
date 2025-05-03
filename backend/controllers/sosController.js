@@ -126,17 +126,16 @@ export const sendSoftSOS = async (req, res) => {
 			const myContacts = await Contact.findOne({ user: userId });
 			if (!myContacts)
 				return res.status(404).json({ message: "No contacts found" });
-			const contacts = await User.find({
-				_id: { $in: myContacts.contacts },
-			}).select("-password ");
-			if (!contacts)
-				return res.status(404).json({ message: "No contacts found" });
-			for (const contact of contacts) {
-				await sendEmail(user, contact, message, coordinates).catch(
-					(error) => {
-						console.error("Error sending email:", error);
-					}
-				);
+
+			for (const contact of myContacts.contacts) {
+				await sendEmail(
+					user,
+					{ email: contact.user_email },
+					message,
+					coordinates
+				).catch((error) => {
+					console.error("Error sending email:", error);
+				});
 			}
 		}
 		res.status(200).json({ message: "SOS sent successfully" });
