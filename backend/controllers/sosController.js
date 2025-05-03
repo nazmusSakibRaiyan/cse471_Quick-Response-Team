@@ -100,6 +100,7 @@ export const sendSoftSOS = async (req, res) => {
 			user: user._id,
 			message,
 			coordinates,
+			isContact: receiver === "contact",
 		});
 		const newSOS = await sos.save();
 
@@ -163,10 +164,10 @@ export const setAsResolved = async (req, res) => {
 
 export const getAllNonResolvedSOS = async (req, res) => {
 	try {
-		const sosList = await SOS.find({ isResolved: false }).populate(
-			"user",
-			"-password"
-		);
+        const sosList = await SOS.find({ isResolved: false, isContact: false }).populate(
+            "user",
+            "-password"
+        );
 		if (!sosList) return res.status(404).json({ message: "No SOS found" });
 
 		res.status(200).json(sosList);
