@@ -198,41 +198,6 @@ export default function SOS() {
 				</button>
 			</div>
 
-			<div className="bg-white mb-6 p-4 sm:p-6 rounded shadow border-l-4 border-yellow-500">
-				<h2 className="text-xl font-semibold mb-4 text-yellow-600">
-					🚨 Emergency SOS
-				</h2>
-				{loading ? (
-					<p className="text-gray-700">Loading...</p>
-				) : (
-					<ul>
-						{nonResolvedSOS.map((sos) => (
-							<li key={sos._id} className="mb-4 border-b pb-4">
-								<p className="text-gray-800">
-									<strong>User:</strong> {sos.user.name}
-								</p>
-								<p className="text-gray-800">
-									<strong>Message:</strong> {sos.message}
-								</p>
-								<p className="text-gray-800">
-									<strong>Location:</strong>{" "}
-									{sos.coordinates.latitude},{" "}
-									{sos.coordinates.longitude}
-								</p>
-								<a
-									href={`https://www.google.com/maps?q=${sos.coordinates.latitude},${sos.coordinates.longitude}`}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="text-blue-500 underline"
-								>
-									View in Google Maps
-								</a>
-							</li>
-						))}
-					</ul>
-				)}
-			</div>
-
 			<div className="bg-white p-4 sm:p-6 rounded shadow border-l-4 border-green-500">
 				<h2 className="text-xl font-semibold mb-4 text-green-600">
 					📜 My SOS
