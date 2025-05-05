@@ -116,7 +116,10 @@ export const sendSoftSOS = async (req, res) => {
 				coordinates: coordinates,
 				acceptedBy: [],
 			});
-			const allVolunteers = await User.find({ role: "volunteer" });
+			const allVolunteers = await User.find({
+				role: "volunteer",
+				volunteerStatus: "active",
+			});
 			if (!allVolunteers)
 				return res.status(404).json({ message: "No volunteers found" });
 			for (const volunteer of allVolunteers) {
@@ -167,10 +170,10 @@ export const setAsResolved = async (req, res) => {
 
 export const getAllNonResolvedSOS = async (req, res) => {
 	try {
-        const sosList = await SOS.find({ isResolved: false, isContact: false }).populate(
-            "user",
-            "-password"
-        );
+		const sosList = await SOS.find({
+			isResolved: false,
+			isContact: false,
+		}).populate("user", "-password");
 		if (!sosList) return res.status(404).json({ message: "No SOS found" });
 
 		res.status(200).json(sosList);
