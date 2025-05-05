@@ -11,6 +11,8 @@ import { Server } from "socket.io";
 import broadcastRoutes from "./routes/broadcastRoutes.js";
 import userManagementRoutes from "./routes/userManagementRoutes.js";
 import blacklistUserRoutes from "./routes/blacklistUserRoutes.js";
+//Tasneem
+import sosAdminRoutes from "./routes/sosAdminRoute.js";
 
 dotenv.config();
 
@@ -34,6 +36,9 @@ app.use("/api/user", userRoute);
 app.use("/api/broadcast", broadcastRoutes);
 app.use("/api/user-management", userManagementRoutes);
 app.use("/api/blacklist-users", blacklistUserRoutes);
+//Tasneem
+app.use("/api/admin/sos", sosAdminRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 

@@ -17,6 +17,8 @@ import Broadcast from "./pages/Broadcast";
 import UserManagement from "./pages/UserManagement";
 import BlacklistUsers from "./pages/BlacklistUsers";
 import Status from "./pages/Status";
+// tasneem
+import ManageSOS from "./pages/SOSManagement";
 
 const App = () => (
 	<Router>
@@ -45,6 +47,9 @@ const App = () => (
 								path="/blacklisted-users"
 								element={<BlacklistUsers />}
 							/>
+							{/* Tasneem */}
+							<Route path="/manage-sos" element={<ManageSOS />} />
+
 						</Route>
 					</Routes>
 				</SocketProvider>

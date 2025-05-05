@@ -36,6 +36,9 @@ const Navbar = () => {
 						<Link to="/user-management" className="mx-2">
 							User Management
 						</Link>
+						<Link to="/manage-sos" className="mx-2"> {/* Added the Manage SOS link */}
+              Manage SOS
+            </Link>
 						{user.role === "volunteer" && (
 							<>
 								<Link to="/alert" className="mx-2">
@@ -44,6 +47,8 @@ const Navbar = () => {
 								<Link to="/status" className="mx-2">
 									Status
 								</Link>
+
+								
 							</>
 						)}
 						<button
