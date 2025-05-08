@@ -68,3 +68,22 @@ export const deleteContact = async (req, res) => {
 		res.status(500).json({ message: "Server error", error });
 	}
 };
+
+// Get the count of emergency contacts for the current user
+export const getContactCount = async (req, res) => {
+    try {
+        // Get user ID from the auth middleware
+        const userId = req.user.userId || req.user.id;
+        
+        // Find the user's contacts
+        const userContacts = await Contact.findOne({ user: userId });
+        
+        // Count contacts or return 0 if none exist
+        const count = userContacts ? userContacts.contacts.length : 0;
+        
+        res.status(200).json({ count });
+    } catch (error) {
+        console.error("Error getting contact count:", error);
+        res.status(500).json({ message: "Failed to get contact count" });
+    }
+};
