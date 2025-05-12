@@ -33,7 +33,7 @@ const Alert = () => {
 		// Fetch unresolved SOS on component mount
 		const fetchUnresolvedSOS = async () => {
 			try {
-				const res = await fetch("http://localhost:5000/api/sos", {
+				const res = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos`, {
 					method: "GET",
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -145,7 +145,7 @@ const Alert = () => {
 
 	const handleAcceptSOS = async (sosId) => {
 		try {
-			const res = await fetch("http://localhost:5000/api/sos/acceptSOS", {
+			const res = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos/acceptSOS`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -184,7 +184,7 @@ const Alert = () => {
 	const handleResolveSOS = async (sosId) => {
 		try {
 			const res = await fetch(
-				"http://localhost:5000/api/sos/setAsResolved",
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos/setAsResolved`,
 				{
 					method: "POST",
 					headers: {

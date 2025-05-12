@@ -9,7 +9,7 @@ export default function UserManagement() {
 	const fetchUsers = async () => {
 		try {
 			const res = await fetch(
-				"http://localhost:5000/api/user-management",
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/user-management`,
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -34,7 +34,7 @@ export default function UserManagement() {
 
 		try {
 			const res = await fetch(
-				`http://localhost:5000/api/user-management/${id}`,
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/user-management/${id}`,
 				{
 					method: "DELETE",
 					headers: {
@@ -57,7 +57,7 @@ export default function UserManagement() {
 	const verifyVolunteer = async (id) => {
 		try {
 			const res = await fetch(
-				`http://localhost:5000/api/user-management/verify/${id}`,
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/user-management/verify/${id}`,
 				{
 					method: "PATCH",
 					headers: { Authorization: `Bearer ${token}` },
@@ -93,13 +93,12 @@ export default function UserManagement() {
 						<th className="p-2 border">Role</th>
 						<th className="p-2 border">Phone</th>
 						<th className="p-2 border">Status</th>{" "}
-						{/* New column */}
 						<th className="p-2 border">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
 					{users.map((u) =>
-						u._id === user?._id ? null : ( // 🛑 if current user, don't render row
+						u._id === user?._id ? null : ( 
 							<tr key={u._id}>
 								<td className="p-2 border">{u.name}</td>
 								<td className="p-2 border">{u.email}</td>

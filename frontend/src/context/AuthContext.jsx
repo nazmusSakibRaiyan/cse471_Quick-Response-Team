@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
 		try {
 			const baseURI =
 				process.env.NODE_ENV === "development"
-					? "http://localhost:5000"
+					? `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}`
 					: ""; //student Id: 21201197
 			const res = await fetch(baseURI + "/api/auth/user", {
 				method: "GET",

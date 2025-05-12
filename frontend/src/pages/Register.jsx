@@ -48,7 +48,7 @@ const Register = () => {
 
     setLoading(true);
     try {
-      const baseURI = process.env.NODE_ENV === "development" ? "http://localhost:5000" : "";
+      const baseURI = process.env.NODE_ENV === "development" ? `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}` : "";
       const res = await fetch(baseURI + "/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -59,9 +59,9 @@ const Register = () => {
         toast.success("Registration successful!");
         navigate("/login");
       } else {
-        const errorData = await res.json(); // Read the error response from the server
-        toast.error(errorData.message || "Registration failed. Try again."); // Display the server's error message
-        console.error("Registration error:", errorData); // Log for more details
+        const errorData = await res.json(); 
+        toast.error(errorData.message || "Registration failed. Please try again."); 
+        console.error("Registration error:", errorData); 
       }
     } catch (error) {
       console.error(error);
@@ -108,7 +108,6 @@ const Register = () => {
             </div>
           ))}
 
-          {/* Role Selection */}
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-1">Role</label>
             <select
@@ -119,7 +118,7 @@ const Register = () => {
             >
               <option value="user">User</option>
               <option value="volunteer">Volunteer</option>
-              <option value="admin">Admin</option> {/* Added Admin option */}
+              <option value="admin">Admin</option> 
             </select>
           </div>
 

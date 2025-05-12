@@ -8,10 +8,9 @@ export default function Status() {
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		// Fetch the current status of the user
 		const fetchStatus = async () => {
 			try {
-				const res = await fetch("http://localhost:5000/api/auth/user", {
+				const res = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}api/auth/user`, {
 					method: "GET",
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -34,7 +33,7 @@ export default function Status() {
 		try {
 			setLoading(true);
 			const res = await fetch(
-				"http://localhost:5000/api/user/updateVolunteerStatus",
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/user/updateVolunteerStatus`,
 				{
 					method: "PATCH",
 					headers: {

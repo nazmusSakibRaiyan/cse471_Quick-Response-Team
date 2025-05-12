@@ -13,7 +13,7 @@ export default function ActiveSOS() {
   const fetchActiveCases = async () => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/sos/monitor-active",
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos/monitor-active`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -35,18 +35,15 @@ export default function ActiveSOS() {
     }
   };
 
-  // Set up initial fetch and refresh interval
   useEffect(() => {
     fetchActiveCases();
     
-    // Set up auto-refresh every 30 seconds
     const interval = setInterval(() => {
       fetchActiveCases();
     }, 30000);
     
     setRefreshInterval(interval);
     
-    // Clean up interval on component unmount
     return () => {
       if (refreshInterval) {
         clearInterval(refreshInterval);
@@ -54,19 +51,16 @@ export default function ActiveSOS() {
     };
   }, []);
 
-  // Handle manual refresh
   const handleRefresh = () => {
     toast.success("Refreshing active cases...");
     fetchActiveCases();
   };
 
-  // Format timestamp to readable date/time
   const formatTime = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleString();
   };
 
-  // Calculate time elapsed since SOS was created
   const getTimeElapsed = (createdAt) => {
     const created = new Date(createdAt);
     const now = new Date();
@@ -166,7 +160,6 @@ export default function ActiveSOS() {
                   <p className="text-gray-700 bg-gray-50 p-3 rounded-lg">{sos.message || "No message provided"}</p>
                 </div>
                 
-                {/* Responders section */}
                 <div>
                   <p className="font-medium mb-2">Responders ({sos.acceptedBy?.length || 0})</p>
                   {sos.acceptedBy && sos.acceptedBy.length > 0 ? (

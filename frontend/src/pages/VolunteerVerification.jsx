@@ -12,12 +12,11 @@ export default function VolunteerVerification() {
     fetchUnverifiedVolunteers();
   }, []);
 
-  // Fetch all unverified volunteers
   const fetchUnverifiedVolunteers = async () => {
     try {
       setLoading(true);
       const response = await fetch(
-        "http://localhost:5000/api/user-management/volunteers/unverified",
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/user-management/volunteers/unverified`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -39,12 +38,11 @@ export default function VolunteerVerification() {
     }
   };
 
-  // Handle volunteer verification
   const handleVerifyVolunteer = async (volunteerId) => {
     try {
       setCurrentAction(volunteerId);
       const response = await fetch(
-        `http://localhost:5000/api/user-management/verify/${volunteerId}`,
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/user-management/verify/${volunteerId}`,
         {
           method: "PATCH",
           headers: {
@@ -55,7 +53,6 @@ export default function VolunteerVerification() {
 
       if (response.ok) {
         toast.success("Volunteer verified successfully");
-        // Remove the volunteer from the list
         setVolunteers(volunteers.filter((volunteer) => volunteer._id !== volunteerId));
       } else {
         const errorData = await response.json();
@@ -69,7 +66,6 @@ export default function VolunteerVerification() {
     }
   };
 
-  // Handle volunteer rejection
   const handleRejectVolunteer = async (volunteerId) => {
     try {
       if (!confirm("Are you sure you want to reject this volunteer? This action cannot be undone.")) {
@@ -78,7 +74,7 @@ export default function VolunteerVerification() {
       
       setCurrentAction(volunteerId);
       const response = await fetch(
-        `http://localhost:5000/api/user-management/reject/${volunteerId}`,
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/user-management/reject/${volunteerId}`,
         {
           method: "DELETE",
           headers: {
@@ -89,7 +85,6 @@ export default function VolunteerVerification() {
 
       if (response.ok) {
         toast.success("Volunteer rejected successfully");
-        // Remove the volunteer from the list
         setVolunteers(volunteers.filter((volunteer) => volunteer._id !== volunteerId));
       } else {
         const errorData = await response.json();

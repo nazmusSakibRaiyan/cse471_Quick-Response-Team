@@ -30,8 +30,7 @@ import {
   MyLocation as MyLocationIcon
 } from "@mui/icons-material";
 
-// You'll need to install these packages:
-// npm install leaflet react-leaflet
+
 
 const NearbySOSMap = () => {
   const { user, token } = useAuth();
@@ -46,11 +45,9 @@ const NearbySOSMap = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [mapInitialized, setMapInitialized] = useState(false);
   
-  // This would be replaced with actual map markers when the real map is loaded
   const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => {
-    // Get user's location
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
@@ -74,7 +71,7 @@ const NearbySOSMap = () => {
       try {
         setLoading(true);
         
-        const response = await fetch("http://localhost:5000/api/sos/active", {
+        const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos/active`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -94,7 +91,6 @@ const NearbySOSMap = () => {
 
     fetchActiveSOSAlerts();
 
-    // Listen for new SOS alerts
     if (socket) {
       socket.on("newSOS", (data) => {
         toast.success("New SOS alert received!", {
@@ -123,13 +119,8 @@ const NearbySOSMap = () => {
     };
   }, [token, user, socket, navigate, selectedSOS]);
 
-  // For demonstration: this would be replaced with actual map initialization
   useEffect(() => {
     if (userLocation && !mapInitialized) {
-      // In a real implementation, this is where you'd initialize the map
-      // using libraries like Leaflet or Google Maps
-      
-      // Simulate map loading
       setTimeout(() => {
         setMapReady(true);
         setMapInitialized(true);
@@ -147,7 +138,7 @@ const NearbySOSMap = () => {
     if (!selectedSOS) return;
 
     try {
-      const response = await fetch("http://localhost:5000/api/sos/acceptSOS", {
+      const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos/acceptSOS`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -162,7 +153,6 @@ const NearbySOSMap = () => {
 
       toast.success("You have accepted this SOS alert");
       
-      // Start location tracking and navigate to SOS detail page
       navigate(`/sos/${selectedSOS._id}`);
     } catch (error) {
       console.error("Error accepting SOS:", error);
@@ -171,7 +161,7 @@ const NearbySOSMap = () => {
   };
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; // Radius of the Earth in km
+    const R = 6371; 
     const dLat = (lat2 - lat1) * (Math.PI / 180);
     const dLon = (lon2 - lon1) * (Math.PI / 180);
     const a =
@@ -179,10 +169,9 @@ const NearbySOSMap = () => {
       Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
       Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return (R * c).toFixed(1); // Distance in km
+    return (R * c).toFixed(1); 
   };
 
-  // This would normally be handled by the map library
   const renderMockMap = () => {
     if (!userLocation) return null;
     
@@ -201,7 +190,7 @@ const NearbySOSMap = () => {
           justifyContent: 'center'
         }}
       >
-        {/* Mock map content */}
+
         <Box sx={{ position: 'absolute', top: 10, left: 10, zIndex: 1000 }}>
           <Button 
             variant="contained" 
@@ -295,10 +284,8 @@ const NearbySOSMap = () => {
             />
           </Box>
           
-          {/* This would be replaced with an actual map component in production */}
           {renderMockMap()}
           
-          {/* List of SOS alerts for easier access */}
           <Paper elevation={2} sx={{ mt: 3, p: 0, overflow: 'hidden' }}>
             <List sx={{ p: 0 }}>
               {sosAlerts.map((sos, index) => (
@@ -358,7 +345,6 @@ const NearbySOSMap = () => {
         </>
       )}
 
-      {/* SOS Detail Drawer */}
       <Drawer
         anchor="right"
         open={drawerOpen}

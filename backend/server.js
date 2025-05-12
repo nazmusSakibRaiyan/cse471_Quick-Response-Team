@@ -55,7 +55,6 @@ const io = new Server(server, {
 	},
 });
 
-// Attach io to the app object
 app.set("io", io);
 
 io.on("connection", (socket) => {
@@ -93,14 +92,10 @@ io.on("connection", (socket) => {
 				return;
 			}
 
-			// Find the user who created the SOS
 			const sosUser = await User.findById(sos.user);
 			if (sosUser && sosUser.socketId) {
-				// Get volunteer info for identification
 				const volunteer = await User.findById(volunteerId);
 				if (!volunteer) return;
-
-				// Send location update directly to the user who created the SOS
 				io.to(sosUser.socketId).emit("respondingVolunteerLocation", {
 					sosId,
 					volunteerId,
@@ -116,8 +111,6 @@ io.on("connection", (socket) => {
 	socket.on("SOSRead", async (data) => {
 		try {
 			const { sosId, volunteerId } = data;
-
-			// Mark SOS notification as read
 			await Notification.findOneAndUpdate(
 				{
 					recipient: volunteerId,
@@ -130,16 +123,13 @@ io.on("connection", (socket) => {
 				}
 			);
 
-			// Get SOS details
 			const sos = await SOS.findById(sosId);
 			if (!sos) return;
 
-			// Find user who created the SOS
 			const sosCreator = await User.findById(sos.user);
 			const volunteer = await User.findById(volunteerId);
 
 			if (sosCreator && sosCreator.socketId && volunteer) {
-				// Notify SOS creator that a volunteer has seen the alert
 				io.to(sosCreator.socketId).emit("sosReadReceipt", {
 					sosId,
 					volunteer: {
@@ -153,8 +143,6 @@ io.on("connection", (socket) => {
 			console.error("Error handling SOS read status:", error);
 		}
 	});
-
-	// Handle sending messages
 	socket.on("sendMessage", async ({ senderId, receiverId, message }) => {
 		try {
 			let chat = await Chat.findOne({
@@ -175,7 +163,6 @@ io.on("connection", (socket) => {
 			chat.messages.push({ message, sender: senderId });
 			await chat.save();
 
-			// Emit the new message to the receiver's room
 			io.to(receiverId).emit("newMessage", { message, sender: senderId });
 		} catch (error) {
 			console.error("Error sending message:", error);
@@ -185,7 +172,6 @@ io.on("connection", (socket) => {
 	socket.on("disconnect", async () => {
 		console.log("A user disconnected:", socket.id);
 
-		// Clear socketId from User document on disconnect
 		try {
 			await User.findOneAndUpdate(
 				{ socketId: socket.id },
@@ -197,7 +183,6 @@ io.on("connection", (socket) => {
 	});
 });
 
-// Chat routes
 app.get("/api/chats/:receiverId", authMiddleware, async (req, res) => {
 	try {
 		const { userId } = req.user;
@@ -245,7 +230,6 @@ app.post("/api/chats/:receiverId", authMiddleware, async (req, res) => {
 		chat.messages.push({ message, sender: userId });
 		await chat.save();
 
-		// Emit the new message via socket.io
 		const io = req.app.get("io");
 		if (io) {
 			io.to(receiverId).emit("newMessage", { message, sender: userId });
@@ -260,20 +244,16 @@ app.post("/api/chats/:receiverId", authMiddleware, async (req, res) => {
 	}
 });
 
-// Fetch all chats for the logged-in user
 app.get("/api/chats", authMiddleware, async (req, res) => {
 	try {
 		const { userId } = req.user;
 
-		// Find all chats where the user is a participant
 		const chats = await Chat.find({
 			$or: [{ user1: userId }, { user2: userId }],
 		})
 			.populate("user1", "name avatar")
 			.populate("user2", "name avatar")
 			.sort({ updatedAt: -1 });
-
-		// Format the response to include the other user's details and last message
 		const formattedChats = chats.map((chat) => {
 			const otherUser =
 				chat.user1._id.toString() === userId ? chat.user2 : chat.user1;
@@ -300,7 +280,6 @@ app.get("/api/chats", authMiddleware, async (req, res) => {
 	}
 });
 
-// Search users by name or email
 app.post("/api/user/search", async (req, res) => {
 	try {
 		const { query } = req.body;
@@ -324,13 +303,10 @@ app.post("/api/user/search", async (req, res) => {
 		res.status(500).json({ message: "Server error" });
 	}
 });
-
-// Get user by ID
 app.get("/api/user/:id", async (req, res) => {
 	try {
 		const { id } = req.params;
 
-		// Validate if the id is a valid ObjectId
 		if (!mongoose.Types.ObjectId.isValid(id)) {
 			return res.status(400).json({ message: "Invalid user ID" });
 		}
@@ -350,7 +326,6 @@ app.get("/api/user/:id", async (req, res) => {
 	}
 });
 
-// Schedule automated reminders for pending responses
-setInterval(sendPendingResponseReminders, 5 * 60 * 1000); // Run every 5 minutes
+setInterval(sendPendingResponseReminders, 100 *5 * 60 * 1000); 
 
 export { io };

@@ -14,18 +14,16 @@ export const broadcastMessage = async (req, res) => {
         const broadcast = new Broadcast({ title, message });
         await broadcast.save();
 
-        // Emit the broadcast message to all connected clients (if using WebSocket)
+        // Emit the broadcast message to all connected clients 
         if (req.io) {
             req.io.emit("broadcast", { title, message });
         }
 
-        // Fetch all users' emails from the User model
         const users = await User.find({}, "email");
         const emailPromises = users.map((user) =>
             sendBroadcastEmail(user.email, `Emergency Broadcast: ${title}`, message)
         );
 
-        // Send emails in parallel
         await Promise.all(emailPromises);
 
         res.status(201).json({ message: "Broadcast message sent successfully", broadcast });
@@ -34,7 +32,6 @@ export const broadcastMessage = async (req, res) => {
     }
 };
 
-// Get all broadcast messages
 export const getAllBroadcasts = async (req, res) => {
     try {
         const broadcasts = await Broadcast.find().sort({ createdAt: -1 });

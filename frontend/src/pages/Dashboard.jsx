@@ -55,8 +55,7 @@ const Dashboard = () => {
       try {
         setLoading(true);
         
-        // Fetch recent notifications
-        const notificationsResponse = await axios.get("http://localhost:5000/api/notifications/recent", {
+        const notificationsResponse = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/notifications/recent`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -64,7 +63,7 @@ const Dashboard = () => {
         
         // Fetch active SOS cases for volunteers
         if (user.role === "volunteer") {
-          const sosResponse = await axios.get("http://localhost:5000/api/sos/active", {
+          const sosResponse = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos/active`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           setActiveSOSCases(sosResponse.data);
@@ -72,10 +71,10 @@ const Dashboard = () => {
         
         // Fetch user stats
         const statsPromises = [
-          axios.get("http://localhost:5000/api/sos/stats", {
+          axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos/stats`, {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          axios.get("http://localhost:5000/api/contacts/count", {
+          axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/contacts/count`, {
             headers: { Authorization: `Bearer ${token}` }
           }).catch(() => ({ data: { count: 0 } }))
         ];

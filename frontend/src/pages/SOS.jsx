@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function SOS() {
-	const navigate = useNavigate(); // Initialize the navigate function
+	const navigate = useNavigate(); 
 	const { user, token } = useAuth();
 	const { respondingVolunteers, socket } = useSocket();
 	const [coordinates, setCoordinates] = useState(null);
@@ -19,13 +19,10 @@ export default function SOS() {
 	const [sosReadReceipts, setSosReadReceipts] = useState({});
 
 	useEffect(() => {
-		// Fetch user's current location
 		navigator.geolocation.getCurrentPosition(
 			async (position) => {
 				const { latitude, longitude } = position.coords;
 				setCoordinates({ latitude, longitude });
-
-				// Fetch location name using a free API
 				try {
 					const res = await fetch(
 						`https://geocode.maps.co/reverse?lat=${latitude}&lon=${longitude}`
@@ -42,14 +39,10 @@ export default function SOS() {
 			}
 		);
 
-		// Fetch user's SOS
 		fetchMySOS();
-
-		// Fetch all non-resolved SOS
 		fetchNonResolvedSOS();
 	}, []);
 
-	// Listen for SOS read receipts
 	useEffect(() => {
 		if (!socket) return;
 
@@ -79,7 +72,7 @@ export default function SOS() {
 	const fetchMySOS = async () => {
 		try {
 			setLoading(true);
-			const res = await fetch("http://localhost:5000/api/sos/mySOS", {
+			const res = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos/mySOS`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -90,7 +83,6 @@ export default function SOS() {
 			const data = await res.json();
 			setMySOS(data);
 
-			// Fetch read receipts for each SOS
 			for (const sos of data) {
 				if (!sos.isResolved) {
 					fetchSOSDetails(sos._id);
@@ -106,7 +98,7 @@ export default function SOS() {
 	const fetchSOSDetails = async (sosId) => {
 		try {
 			const response = await axios.get(
-				`http://localhost:5000/api/sos/${sosId}`,
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos/${sosId}`,
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -128,7 +120,7 @@ export default function SOS() {
 	const fetchNonResolvedSOS = async () => {
 		try {
 			setLoading(true);
-			const res = await fetch("http://localhost:5000/api/sos", {
+			const res = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos`, {
 				method: "GET",
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -153,8 +145,8 @@ export default function SOS() {
 			setLoading(true);
 			const endpoint =
 				receiver === "silent"
-					? "http://localhost:5000/api/sos/sendSilentSOS"
-					: "http://localhost:5000/api/sos/sendSoftSOS";
+					? `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos/sendSilentSOS`
+					: `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos/sendSoftSOS`;
 			const res = await fetch(endpoint, {
 				method: "POST",
 				headers: {
@@ -185,7 +177,7 @@ export default function SOS() {
 		try {
 			setLoading(true);
 			const res = await fetch(
-				"http://localhost:5000/api/sos/setAsResolved",
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos/setAsResolved`,
 				{
 					method: "POST",
 					headers: {
@@ -208,8 +200,6 @@ export default function SOS() {
 			setLoading(false);
 		}
 	};
-
-	// Helper function to check if a volunteer has responded to an SOS
 	const hasResponders = (sosId) => {
 		return (
 			respondingVolunteers[sosId] &&
@@ -217,7 +207,6 @@ export default function SOS() {
 		);
 	};
 
-	// Helper to format date
 	const formatDate = (date) => {
 		return new Date(date).toLocaleString();
 	};
@@ -322,7 +311,6 @@ export default function SOS() {
 									</button>
 								)}
 
-								{/* Show read receipts */}
 								{sosReadReceipts[sos._id] &&
 									sosReadReceipts[sos._id].length > 0 && (
 										<div className="mt-3">
@@ -355,7 +343,6 @@ export default function SOS() {
 										</div>
 									)}
 
-								{/* Show responding volunteers if there are any */}
 								{!sos.isResolved && hasResponders(sos._id) && (
 									<div className="mt-3">
 										<h4 className="font-semibold text-blue-600">
@@ -406,7 +393,6 @@ export default function SOS() {
 									</div>
 								)}
 
-								{/* Button to view details of the SOS */}
 								{!sos.isResolved && (
 									<div className="mt-3">
 										<button
@@ -425,9 +411,6 @@ export default function SOS() {
 				)}
 			</div>
 
-			{/* Multi-location Map View (for future enhancement) */}
-			{/* This would be a good place to add an embedded map showing both the user's location 
-			    and all responding volunteers' locations on a single map */}
 		</div>
 	);
 }

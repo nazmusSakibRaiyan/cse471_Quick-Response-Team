@@ -19,7 +19,7 @@ export const SocketProvider = ({ children }) => {
 
 	// Initialize socket connection
 	useEffect(() => {
-		const newSocket = io("http://localhost:5000", {
+		const newSocket = io(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}`, {
 			reconnectionAttempts: 5,
 			reconnectionDelay: 1000,
 			transports: ['websocket', 'polling']

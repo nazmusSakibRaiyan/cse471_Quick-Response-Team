@@ -4,7 +4,6 @@ import SOS from '../models/SOS.js';
 import { io } from '../server.js';
 import { sendEmail } from '../utils/sendEmail.js';
 
-// Get all notifications for the current user
 export const getUserNotifications = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -64,7 +63,7 @@ export const markAllAsRead = async (req, res) => {
   }
 };
 
-// Create SOS notification and send email/SMS alerts
+// Create SOS notification and send email alerts
 export const createSOSNotification = async (sosId, userId, volunteers = []) => {
   try {
     const sos = await SOS.findById(sosId).populate('user', 'name email phone');
@@ -113,7 +112,7 @@ export const createSOSNotification = async (sosId, userId, volunteers = []) => {
       }
     }
     
-    // Send notifications to emergency contacts (handled by contactController)
+    // Send notifications to emergency contacts
     
   } catch (error) {
     console.error('Error in createSOSNotification:', error);
@@ -141,12 +140,10 @@ export const createReminderNotification = async (userId, relatedId, message, onM
     
     await notification.save();
     
-    // Send real-time notification if user is online
     if (user.socketId) {
       io.to(user.socketId).emit('reminder', notification);
     }
     
-    // Send email reminder
     sendEmail(
       user.email,
       'Reminder: Action Required',
@@ -191,7 +188,6 @@ export const updateSOSReadStatus = async (req, res) => {
     const volunteer = await User.findById(volunteerId, 'name email');
     const sosCreator = await User.findById(sos.user);
     
-    // Send real-time notification to SOS creator that volunteer has seen the alert
     if (sosCreator && sosCreator.socketId) {
       io.to(sosCreator.socketId).emit('sosReadReceipt', {
         sosId,
@@ -222,7 +218,6 @@ export const sendPendingResponseReminders = async () => {
     });
     
     for (const sos of pendingSOS) {
-      // Find volunteers who have been notified but haven't responded
       const notifiedVolunteers = await Notification.find({
         relatedId: sos._id,
         type: 'SOS',
@@ -230,7 +225,6 @@ export const sendPendingResponseReminders = async () => {
       });
       
       for (const notification of notifiedVolunteers) {
-        // Send reminder to volunteer
         createReminderNotification(
           notification.recipient,
           sos._id,

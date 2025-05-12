@@ -16,7 +16,7 @@ export default function Contact() {
 	const fetchContacts = async () => {
 		try {
 			const res = await fetch(
-				"http://localhost:5000/api/contact/getAllContacts",
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/contact/getAllContacts`,
 				{
 					method: "POST",
 					headers: {
@@ -42,7 +42,7 @@ export default function Contact() {
 	const fetchAllUsers = async () => {
 		try {
 			const res = await fetch(
-				"http://localhost:5000/api/user/getAllUser",
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/user/getAllUser`,
 				{
 					method: "POST",
 					headers: {
@@ -94,7 +94,7 @@ export default function Contact() {
 			};
 
 			const res = await fetch(
-				"http://localhost:5000/api/contact/addContact",
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/contact/addContact`,
 				{
 					method: "POST",
 					headers: {
@@ -128,7 +128,7 @@ export default function Contact() {
 				return;
 			}
 			const res = await fetch(
-				"http://localhost:5000/api/contact/deleteContact",
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/contact/deleteContact`,
 				{
 					method: "DELETE",
 					headers: {

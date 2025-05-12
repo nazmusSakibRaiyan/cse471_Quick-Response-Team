@@ -28,7 +28,7 @@ export default function SingleChat() {
 	const fetchReceiverProfile = async () => {
 		try {
 			const response = await axios.get(
-				`http://localhost:5000/api/user/${receiverId}`,
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/user/${receiverId}`,
 				{
 					headers: { Authorization: `Bearer ${token}` },
 				}
@@ -46,7 +46,7 @@ export default function SingleChat() {
 	const fetchMessages = async () => {
 		try {
 			const response = await axios.get(
-				`http://localhost:5000/api/chats/${receiverId}`,
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/chats/${receiverId}`,
 				{
 					headers: { Authorization: `Bearer ${token}` },
 				}

@@ -41,14 +41,13 @@ export const register = async (req, res) => {
       role, 
       address, 
       nid,
-      // If the role is volunteer, set isVerified to false and isApproved to false
       isVerified: role !== "volunteer",
       isApproved: role !== "volunteer"
     });
     await newUser.save();
 
     // Send Welcome Email with appropriate message
-    const emailSubject = "Welcome to SOS";
+    const emailSubject = "Welcome to Quick Response Team!";	
     let emailText = `Hi ${name},\n\nThank you for registering on SOS! We're excited to have you on board.`;
     
     if (role === "volunteer") {
@@ -75,30 +74,26 @@ export const register = async (req, res) => {
   }
 };
 
-// Login 
+
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Find user
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "User not found" });
 
-    // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
-    // Check if volunteer is verified and approved
     if (user.role === "volunteer" && (!user.isVerified || !user.isApproved)) {
       return res.status(403).json({ 
         message: "Your volunteer account is pending admin verification. You will be notified once your account is approved." 
       });
     }
 
-    // Generate OTP
     const otp = generateOTP();
     user.otp = otp;
-    user.otpExpires = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes expiry
+    user.otpExpires = new Date(Date.now() + 5 * 60 * 1000); 
     await user.save();
 
     // Send OTP via Email
@@ -115,16 +110,16 @@ export const login = async (req, res) => {
   }
 };
 
-// Verify OTP & Generate JWT Token (Step 2)
+// Verify OTP & Generate JWT Token 
 export const verifyOTP = async (req, res) => {
   try {
     const { email, otp } = req.body;
 
-    // Find user
+
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "User not found" });
 
-    // Check OTP
+
     if (user.otp !== otp || user.otpExpires < Date.now()) {
       return res.status(400).json({ message: "Invalid or expired OTP" });
     }
@@ -140,7 +135,7 @@ export const verifyOTP = async (req, res) => {
     user.otpExpires = null;
     await user.save();
 
-    // Send back the token and user details (excluding sensitive info)
+    // Send back the token and user details 
     res.status(200).json({
       message: "Login successful",
       token,
@@ -162,7 +157,6 @@ export const verifyOTP = async (req, res) => {
 // Get User Info (Protected Route)
 export const getUser = async (req, res) => {
   try {
-    // req.user is set by authMiddleware after decoding the token
     const user = await User.findById(req.user.userId).select("-password"); 
 
     if (!user) {
@@ -180,7 +174,7 @@ export const getUser = async (req, res) => {
 // Update User Profile
 export const updateProfile = async (req, res) => {
   try {
-    const userId = req.user.userId; // Assuming authMiddleware adds userId to req.user
+    const userId = req.user.userId; 
     const { name, email, phone, address, nid } = req.body;
 
     const user = await User.findById(userId);
@@ -188,7 +182,6 @@ export const updateProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update fields if they are provided in the request body
     if (name) user.name = name;
     if (email) {
       // Check if the new email is already taken by another user
@@ -206,7 +199,6 @@ export const updateProfile = async (req, res) => {
 
     await user.save();
 
-    // Return updated user information (excluding sensitive data)
     res.status(200).json({
       message: "Profile updated successfully",
       user: {

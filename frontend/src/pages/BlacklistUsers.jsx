@@ -10,7 +10,7 @@ export default function UserManagement() {
   // Fetch all normal users
   const fetchUsers = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/user-management", {
+      const res = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/user-management`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -28,7 +28,7 @@ export default function UserManagement() {
   // Fetch all blacklisted users
   const fetchBlacklistedUsers = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/blacklist-users", {
+      const res = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/blacklist-users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -48,7 +48,7 @@ export default function UserManagement() {
     if (!window.confirm("Are you sure you want to blacklist this user?")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/blacklist-users/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/blacklist-users/${id}`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -87,7 +87,7 @@ export default function UserManagement() {
     if (!window.confirm("Are you sure you want to remove this user from blacklist?")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/blacklist-users/remove/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/blacklist-users/remove/${id}`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}` },
       });

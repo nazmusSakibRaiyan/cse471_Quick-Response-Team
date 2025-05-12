@@ -29,7 +29,7 @@ export default function Chats() {
 	const fetchChatList = async () => {
 		try {
 			const response = await axios.get(
-				"http://localhost:5000/api/chats",
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/chats`,
 				{
 					headers: { Authorization: `Bearer ${token}` },
 				}
@@ -45,7 +45,7 @@ export default function Chats() {
 	const handleSearch = async () => {
 		try {
 			const response = await axios.post(
-				`http://localhost:5000/api/user/search`,
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/user/search`,
 				{ query: searchQuery },
 				{
 					headers: { Authorization: `Bearer ${token}` },

@@ -1,4 +1,3 @@
-// src/pages/Broadcast.js
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
@@ -15,8 +14,8 @@ export default function Broadcast() {
 
   const fetchBroadcasts = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/broadcast", {
-        headers: { Authorization: `Bearer ${token}` }, // Added Authorization header
+      const res = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/broadcast`, {
+        headers: { Authorization: `Bearer ${token}` }, 
       });
       const data = await res.json();
       setBroadcasts(data);
@@ -30,11 +29,11 @@ export default function Broadcast() {
     if (!title || !message) return toast.error("Title and message are required");
 
     try {
-      const res = await fetch("http://localhost:5000/api/broadcast", {
+      const res = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/broadcast`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Added Authorization header
+          Authorization: `Bearer ${token}`, 
         },
         body: JSON.stringify({ title, message }),
       });

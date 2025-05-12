@@ -1,10 +1,8 @@
-// utils/sendEmail.js
 import nodemailer from "nodemailer";
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Create a transporter for sending emails
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -13,7 +11,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Generic email sending function
+
 export const sendEmail = async (to, subject, text, html = null) => {
   try {
     const mailOptions = {
@@ -33,12 +31,12 @@ export const sendEmail = async (to, subject, text, html = null) => {
   }
 };
 
-// Send broadcast emails
+
 export const sendBroadcastEmail = async (to, subject, text) => {
   return sendEmail(to, subject, text);
 };
 
-// Send SOS alert to emergency contacts
+
 export const sendSOSEmergencyAlert = async (to, userName, message, coordinates, timestamp) => {
   const subject = `URGENT: SOS EMERGENCY ALERT - ${userName} NEEDS HELP`;
   
@@ -70,10 +68,8 @@ export const sendSOSEmergencyAlert = async (to, userName, message, coordinates, 
   return sendEmail(to, subject, textContent, htmlContent);
 };
 
-// Send SMS via email-to-SMS gateways (major US carriers)
 export const sendSMS = async (phoneNumber, message, carrier) => {
   try {
-    // Common email-to-SMS gateways for major carriers
     const carriers = {
       'att': `${phoneNumber}@txt.att.net`,
       'tmobile': `${phoneNumber}@tmomail.net`,
@@ -86,12 +82,12 @@ export const sendSMS = async (phoneNumber, message, carrier) => {
       'virgin': `${phoneNumber}@vmobl.com`,
     };
     
-    // If carrier is known, use specific gateway
+   
     let recipient;
     if (carrier && carriers[carrier.toLowerCase()]) {
       recipient = carriers[carrier.toLowerCase()];
     } else {
-      // Try multiple carriers if unsure
+
       recipient = [
         carriers.att,
         carriers.tmobile, 
@@ -103,7 +99,7 @@ export const sendSMS = async (phoneNumber, message, carrier) => {
       from: `"EMERGENCY" <${process.env.EMAIL_USER}>`,
       to: recipient,
       subject: 'SOS ALERT',
-      text: message.substring(0, 160) // SMS typically limited to 160 chars
+      text: message.substring(0, 160) 
     };
     
     const info = await transporter.sendMail(mailOptions);
@@ -111,7 +107,6 @@ export const sendSMS = async (phoneNumber, message, carrier) => {
     return info;
   } catch (error) {
     console.error("Failed to send SMS via email gateway:", error);
-    // Don't throw error for SMS, as it's a best-effort attempt
     return null;
   }
 };

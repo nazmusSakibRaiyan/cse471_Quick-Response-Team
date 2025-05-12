@@ -25,7 +25,7 @@ import axios from "axios";
 const Notifications = () => {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [notifications, setNotifications] = useState([]);
-	const [sosAlerts, setSosAlerts] = useState([]); // New state for SOS alerts
+	const [sosAlerts, setSosAlerts] = useState([]); 
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const { user, token } = useAuth();
@@ -33,11 +33,10 @@ const Notifications = () => {
 
 	const open = Boolean(anchorEl);
 
-	// Fetch notifications when component mounts
 	useEffect(() => {
 		if (user) {
 			fetchNotifications();
-			fetchUnresolvedSOS(); // Fetch unresolved SOS alerts
+			fetchUnresolvedSOS(); 
 		}
 	}, [user]);
 
@@ -47,7 +46,7 @@ const Notifications = () => {
 		setLoading(true);
 		try {
 			const response = await axios.get(
-				"http://localhost:5000/api/notifications",
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/notifications`,
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -65,7 +64,7 @@ const Notifications = () => {
 
 	const fetchUnresolvedSOS = async () => {
 		try {
-			const response = await axios.get("http://localhost:5000/api/sos", {
+			const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
@@ -78,9 +77,7 @@ const Notifications = () => {
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
-		// When opening notifications, reset unread count
 		resetUnreadNotifications();
-		// Mark notifications as read
 		if (notifications.some((notif) => !notif.isRead)) {
 			markAllAsRead();
 		}
@@ -93,7 +90,7 @@ const Notifications = () => {
 	const markAllAsRead = async () => {
 		try {
 			await axios.put(
-				"http://localhost:5000/api/notifications/mark-all-read",
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/notifications/mark-all-read`,
 				{},
 				{
 					headers: {
@@ -102,7 +99,6 @@ const Notifications = () => {
 				}
 			);
 
-			// Update local notification state to mark all as read
 			setNotifications(
 				notifications.map((notif) => ({
 					...notif,
@@ -117,7 +113,6 @@ const Notifications = () => {
 	const handleNotificationClick = (notification) => {
 		handleClose();
 
-		// Navigate based on notification type
 		switch (notification.type) {
 			case "SOS":
 				navigate(`/sos/${notification.relatedId}`);
@@ -129,11 +124,9 @@ const Notifications = () => {
 				navigate("/broadcast");
 				break;
 			default:
-				// Default action is to do nothing
 				break;
 		}
 
-		// Mark this specific notification as read
 		if (!notification.isRead) {
 			markAsRead(notification._id);
 		}
@@ -142,7 +135,7 @@ const Notifications = () => {
 	const markAsRead = async (notificationId) => {
 		try {
 			await axios.put(
-				`http://localhost:5000/api/notifications/${notificationId}/read`,
+				`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/notifications/${notificationId}/read`,
 				{},
 				{
 					headers: {
@@ -151,7 +144,6 @@ const Notifications = () => {
 				}
 			);
 
-			// Update local state
 			setNotifications(
 				notifications.map((notif) =>
 					notif._id === notificationId
@@ -164,7 +156,6 @@ const Notifications = () => {
 		}
 	};
 
-	// Helper function to get the right icon for each notification type
 	const getNotificationIcon = (type) => {
 		switch (type) {
 			case "SOS":
@@ -178,7 +169,6 @@ const Notifications = () => {
 		}
 	};
 
-	// Format the timestamp
 	const formatTime = (timestamp) => {
 		try {
 			return format(new Date(timestamp), "MMM d, h:mm a");
@@ -234,7 +224,7 @@ const Notifications = () => {
 
 				<Divider />
 
-				{/* Display unresolved SOS alerts */}
+
 				{sosAlerts.length > 0 && (
 					<>
 						<Typography

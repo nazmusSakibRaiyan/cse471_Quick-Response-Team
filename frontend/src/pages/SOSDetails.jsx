@@ -15,7 +15,7 @@ const SOSDetails = () => {
 		const fetchSOSDetails = async () => {
 			try {
 				const response = await axios.get(
-					`http://localhost:5000/api/sos/${id}`,
+					`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos/${id}`,
 					{
 						headers: {
 							Authorization: `Bearer ${token}`,

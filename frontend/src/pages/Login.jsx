@@ -1,5 +1,3 @@
-// src/components/Login.js
-
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +23,7 @@ const Login = () => {
 		try {
 			const baseURI =
 				process.env.NODE_ENV === "development"
-					? "http://localhost:5000"
+					? `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}`
 					: "";
 			const res = await fetch(baseURI + "/api/auth/login", {
 				method: "POST",
@@ -51,7 +49,7 @@ const Login = () => {
 		try {
 			const baseURI =
 				process.env.NODE_ENV === "development"
-					? "http://localhost:5000"
+					? `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}`
 					: "";
 			const res = await fetch(baseURI + "/api/auth/verify-otp", {
 				method: "POST",

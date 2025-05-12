@@ -27,10 +27,9 @@ const Profile = () => {
             });
             setIsLoading(false);
         } else {
-            // If user data isn't loaded yet, try fetching it
             const fetchUserData = async () => {
                 try {
-                    const response = await axios.get("http://localhost:5000/api/auth/user", {
+                    const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/auth/user`, {
                         headers: { Authorization: `Bearer ${token}` },
                     });
                     if (response.data && response.data.user) {
@@ -69,16 +68,13 @@ const Profile = () => {
         try {
             console.log("Updating profile with data:", formData);
             const response = await axios.put(
-                "http://localhost:5000/api/auth/update-profile",
+                `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/auth/update-profile`,
                 formData,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             console.log("Profile update response:", response.data);
             toast.success("Profile updated successfully!");
-            // Update user context if your AuthContext supports it
             if (response.data && response.data.user) {
-                // Since we can't directly update the user in AuthContext from here,
-                // we can reload the page to get fresh user data
                 window.location.reload();
             }
         } catch (error) {
@@ -90,12 +86,12 @@ const Profile = () => {
     const handleDeleteAccount = async () => {
         if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
             try {
-                await axios.delete("http://localhost:5000/api/auth/delete-account", {
+                await axios.delete(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/auth/delete-account`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 toast.success("Account deleted successfully.");
-                logout(); // Log out the user
-                navigate("/"); // Redirect to homepage
+                logout(); 
+                navigate("/"); 
             } catch (error) {
                 console.error("Error deleting account:", error);
                 toast.error(error.response?.data?.message || "Failed to delete account.");

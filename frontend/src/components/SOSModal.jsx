@@ -23,7 +23,7 @@ const SOSModal = () => {
 
 	const handleAccept = async () => {
 		try {
-			const response = await fetch("http://localhost:5000/api/sos/acceptSOS", {
+			const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/sos/acceptSOS`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
